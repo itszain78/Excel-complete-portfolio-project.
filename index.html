@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PakWeather</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    
+</head>
+<body>
+
+    <nav>
+        <a href="#home" class="logo">Pak<span>Weather</span></a>
+        <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#weather-tool">Check Weather</a></li>
+            <li><a href="#about">About Project</a></li>
+        </ul>
+    </nav>
+
+    <section id="home">
+        <div class="hero-text">
+            <h1>Stay Ahead of the Storm</h1>
+            <p>Accurate live weather updates for every corner of Pakistan.</p>
+            <a href="#weather-tool" class="btn-main">Get Started</a>
+        </div>
+    </section>
+
+    <section id="weather-tool">
+        <div class="search-container">
+            <h2>Real-Time Forecast</h2>
+            <div class="search-box">
+                <input type="text" id="cityInput" placeholder="Enter city name (e.g. Multan, Gwadar)...">
+                <button class="search-btn" onclick="getWeather()">Search</button>
+            </div>
+
+            <div id="weatherDisplay" class="result-card" style="display: none;">
+                <h3 id="cityName" style="font-size: 2rem;">City Name</h3>
+                <div class="temp-val"><span id="tempValue">0</span>°C</div>
+                <p id="weatherDesc" class="desc-text">Cloudy</p>
+                <div style="display:flex; justify-content:center; gap:30px; margin-top:20px;">
+                    <p>Humidity: <b id="humidity">0%</b></p>
+                    <p>Wind: <b id="wind">0 km/h</b></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="cities-section">
+            <h3>Quick View Major Cities</h3>
+            <div class="grid">
+                <div class="city-box" onclick="quickSearch('Karachi')">Karachi</div>
+                <div class="city-box" onclick="quickSearch('Lahore')">Lahore</div>
+                <div class="city-box" onclick="quickSearch('Islamabad')">Islamabad</div>
+                <div class="city-box" onclick="quickSearch('Faisalabad')">Faisalabad</div>
+                <div class="city-box" onclick="quickSearch('Rawalpindi')">Rawalpindi</div>
+                <div class="city-box" onclick="quickSearch('Multan')">Multan</div>
+                <div class="city-box" onclick="quickSearch('Hyderabad')">Hyderabad</div>
+                <div class="city-box" onclick="quickSearch('Quetta')">Quetta</div>
+                <div class="city-box" onclick="quickSearch('Peshawar')">Peshawar</div>
+                <div class="city-box" onclick="quickSearch('Gwadar')">Gwadar</div>
+                <div class="city-box" onclick="quickSearch('Sialkot')">Sialkot</div>
+                <div class="city-box" onclick="quickSearch('Gilgit')">Gilgit</div>
+            </div>
+        </div>
+    </section>
+
+    <section id="about">
+        <div class="about-text">
+            <h2>About This Project</h2>
+            <p> I am a motivated frontend developer currently building my skills in HTML, CSS, and JavaScript. I enjoy developing real web applications. Through this project, I practiced API integration and JavaScript logic. I am continuously learning and improving my development skills..</p>
+            <br>
+            <p>✔ <b>Project Overview:</b> Real-time weather datafrom API<br>
+               ✔ <b>Technologies Used:</b> Html,CSS,JavaScript,API <br>
+               ✔ <b>My Role:</b> Developed frontend using HTMl,CSS,JavaScript</p>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 PakWeather Portal | Developed by<span> M.Zain</span></p>
+        <p style="font-size: 0.8rem; opacity: 0.6; margin-top: 10px;">Powered by OpenWeatherMap API</p>
+    </footer>
+
+    <script>
+    
+        const apiKey = 'e67732952fee8e8a79c79b79cec8345c'; 
+
+        async function getWeather() {
+            const city = document.getElementById('cityInput').value;
+            if (!city) return alert("Please enter a city!");
+            fetchData(city);
+        }
+
+        function quickSearch(city) {
+            document.getElementById('cityInput').value = city;
+            fetchData(city);
+            window.location.href = '#weather-tool';
+        }
+
+        async function fetchData(city) {
+            const url = `https://api.openweathermap.org/data/2.5/weather?q=${city},pk&units=metric&appid=${apiKey}`;
+            try {
+                const res = await fetch(url);
+                const data = await res.json();
+                if (data.cod === "404") return alert("City not found!");
+
+                document.getElementById('cityName').innerText = data.name;
+                document.getElementById('tempValue').innerText = Math.round(data.main.temp);
+                document.getElementById('weatherDesc').innerText = data.weather[0].description;
+                document.getElementById('humidity').innerText = data.main.humidity + "%";
+                document.getElementById('wind').innerText = data.wind.speed + " km/h";
+                
+                document.getElementById('weatherDisplay').style.display = 'block';
+            } catch (err) {
+                alert("Error connecting to server.");
+            }
+        }
+    </script>
+</body>
+</html>
